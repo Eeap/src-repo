@@ -63,7 +63,7 @@ jobs:
           API_TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
         with:
           source_file: 'values.yaml'
-          destination_repo: 'Eeap/examples'
+          destination_repo: 'Terraform-Canvas/canvas-helm'
           destination_folder: 'charts/hello-world'
           user_email: 'kdg97811@naver.com'
           user_name: 'Eeap'
