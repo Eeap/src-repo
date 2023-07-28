@@ -24,7 +24,6 @@ jobs:
       OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
       OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
       IMAGE_TAG: ${{ github.sha }}
-      REPOSITORY_NAME: terraform_canvas
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -33,7 +32,7 @@ jobs:
         uses: oracle-actions/get-ocir-repository@v1.2.1
         id: get-ocir-repository
         with:
-          name: "$REPOSITORY_NAME"
+          name: terraform_canvas
           compartment: ${{ secrets.OCI_COMPARTMENT_OCID }}
 
       - name: Log into OCIR
@@ -45,8 +44,8 @@ jobs:
       - name: Tag and push a container image
         id: tag-and-push-image
         run: |
-          docker build -t "$REPOSITORY_NAME:new-backend" .
-          docker tag "$REPOSITORY_NAME:new-backend" "${{ steps.get-ocir-repository.outputs.repo_path }}:$IMAGE_TAG"
+          docker build -t "terraform_canvas:new-backend" .
+          docker tag "terraform_canvas:new-backend" "${{ steps.get-ocir-repository.outputs.repo_path }}:$IMAGE_TAG"
           docker push "${{ steps.get-ocir-repository.outputs.repo_path }}:$IMAGE_TAG"
       - name: update values.yaml
         run: |
