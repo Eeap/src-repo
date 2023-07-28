@@ -34,13 +34,11 @@ jobs:
         with:
           name: terraform_canvas
           compartment: ${{ secrets.OCI_COMPARTMENT_OCID }}
-
       - name: Log into OCIR
         uses: oracle-actions/login-ocir@v1.2.1
         id: login-ocir
         with:
           auth_token: ${{ secrets.OCI_AUTH_TOKEN }}
-
       - name: Tag and push a container image
         id: tag-and-push-image
         run: |
@@ -58,7 +56,7 @@ jobs:
           replicaCount: 1
 
           image:
-            repository: nginx@latest
+            repository: ${{ steps.get-ocir-repository.outputs.repo_path }}:$IMAGE_TAG"
             pullPolicy: IfNotPresent
             # Overrides the image tag whose default is the chart appVersion.
             tag: ""
@@ -79,7 +77,6 @@ jobs:
             type: ClusterIP
             port: 80
           EOF
-
       - name: Pushes test file
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
