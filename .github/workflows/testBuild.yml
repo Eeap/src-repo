@@ -24,17 +24,47 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: create txt file
-        run: touch test.txt
+      - name: update values.yaml
+        run: |
+          cat <<EOF> values.yaml
+          ---
+          # Default values for hello-world.
+          # This is a YAML-formatted file.
+          # Declare variables to be passed into your templates.
+
+          replicaCount: 1
+
+          image:
+            repository: nginx@latest
+            pullPolicy: IfNotPresent
+            # Overrides the image tag whose default is the chart appVersion.
+            tag: ""
+
+          nameOverride: ""
+          fullnameOverride: ""
+
+          serviceAccount:
+            # Specifies whether a service account should be created
+            create: true
+            # Annotations to add to the service account
+            annotations: {}
+            # The name of the service account to use.
+            # If not set and create is true, a name is generated using the fullname template
+            name: ""
+
+          service:
+            type: ClusterIP
+            port: 80
+          EOF
 
       - name: Pushes test file
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
         with:
-          source_file: 'test.txt'
+          source_file: 'values.yaml'
           destination_repo: 'Eeap/examples'
-          destination_folder: './'
+          destination_folder: 'charts/hello-world'
           user_email: 'kdg97811@naver.com'
           user_name: 'Eeap'
           commit_message: 'actions: add test file'
